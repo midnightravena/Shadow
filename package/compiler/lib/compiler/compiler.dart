@@ -107,3 +107,9 @@ class Compiler {
     derived.prepare(isAsync: isAsync);
     return derived;
   }
+
+  String resolveImportPath(final String path) {
+    final String importDir = p.dirname(modulePath);
+    final String absolutePath = p.join(importDir, path);
+    return p.normalize(absolutePath);
+  }
