@@ -480,3 +480,96 @@ abstract class Parser {
     parseExpression(compiler);
     compiler.consume(Tokens.parenRight);
   }
+
+  static void parseIdentifier(final Compiler compiler) {
+    final int index = parseIdentifierConstant(compiler);
+    bool emitIndex = true;
+
+    void emitLookup() {
+      compiler.emitOpCode(OpCodes.opLookup);
+      compiler.emitCode(index);
+    }
+
+    void emitAssign() {
+      compiler.emitOpCode(OpCodes.opAssign);
+    }
+
+    void emitAssignAndIndex() {
+      compiler.emitOpCode(OpCodes.opAssign);
+      compiler.emitCode(index);
+    }
+
+    void emitExprAssign(final OpCodes opCode) {
+      emitLookup();
+      parsePrecedence(compiler, Precedence.assignment);
+      compiler.emitOpCode(opCode);
+      emitAssign();
+    }
+
+    if (compiler.match(Tokens.declare)) {
+      parseExpression(compiler);
+      compiler.emitOpCode(OpCodes.opDeclare);
+    } else if (compiler.match(Tokens.assign)) {
+      parseExpression(compiler);
+      emitAssign();
+    } else if (compiler.match(Tokens.increment)) {
+      emitLookup();
+      compiler.emitConstant(1.0);
+      compiler.emitOpCode(OpCodes.opAdd);
+      emitAssign();
+    } else if (compiler.match(Tokens.decrement)) {
+      emitLookup();
+      compiler.emitConstant(1.0);
+      compiler.emitOpCode(OpCodes.opSubtract);
+      emitAssign();
+    } else if (compiler.match(Tokens.plusEqual)) {
+      emitExprAssign(OpCodes.opAdd);
+    } else if (compiler.match(Tokens.minusEqual)) {
+      emitExprAssign(OpCodes.opSubtract);
+    } else if (compiler.match(Tokens.asteriskEqual)) {
+      emitExprAssign(OpCodes.opMultiply);
+    } else if (compiler.match(Tokens.exponentEqual)) {
+      emitExprAssign(OpCodes.opExponent);
+    } else if (compiler.match(Tokens.slashEqual)) {
+      emitExprAssign(OpCodes.opDivide);
+    } else if (compiler.match(Tokens.floorEqual)) {
+      emitExprAssign(OpCodes.opFloor);
+    } else if (compiler.match(Tokens.moduloEqual)) {
+      emitExprAssign(OpCodes.opModulo);
+    } else if (compiler.match(Tokens.ampersandEqual)) {
+      emitExprAssign(OpCodes.opBitwiseAnd);
+    } else if (compiler.match(Tokens.pipeEqual)) {
+      emitExprAssign(OpCodes.opBitwiseOr);
+    } else if (compiler.match(Tokens.caretEqual)) {
+      emitExprAssign(OpCodes.opBitwiseXor);
+    } else if (compiler.match(Tokens.logicalAndEqual)) {
+      emitIndex = false;
+      emitLookup();
+      parseLogicalAnd(
+        compiler,
+        precedence: Precedence.assignment,
+        beforePatch: emitAssignAndIndex,
+      );
+    } else if (compiler.match(Tokens.logicalOrEqual)) {
+      emitIndex = false;
+      emitLookup();
+      parseLogicalOr(
+        compiler,
+        precedence: Precedence.assignment,
+        beforePatch: emitAssignAndIndex,
+      );
+    } else if (compiler.match(Tokens.nullOrEqual)) {
+      emitIndex = false;
+      emitLookup();
+      parseNullOr(
+        compiler,
+        precedence: Precedence.assignment,
+        beforePatch: emitAssignAndIndex,
+      );
+    } else {
+      compiler.emitOpCode(OpCodes.opLookup);
+    }
+    if (emitIndex) {
+      compiler.emitCode(index);
+    }
+  }
