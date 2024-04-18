@@ -1,0 +1,37 @@
+name: cli
+description: CLI of Shadow.
+version: 0.0.1
+publish_to: none
+
+environment:
+    sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+    args: ^2.4.2
+    compiler:
+        git:
+            url: https://github.com/midnightravena/Shadow.git
+            path: packages/compiler
+    shared:
+        git:
+            url: https://github.com/midnightravena/Shadow.git
+            path: packages/shared
+    vm:
+        git:
+            url: https://github.com/midnightravena/Shadow.git
+            path: packages/vm
+    collection: ^1.17.2
+    path: ^1.8.3
+
+dependency_overrides:
+    beize_compiler:
+        path: ../compiler
+    beize_shared:
+        path: ../shared
+    beize_vm:
+        path: ../vm
+
+dev_dependencies:
+    dart_lint:
+        git:
+            url: https://github.com/sahilarun/dart_lint.git
