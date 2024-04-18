@@ -309,3 +309,9 @@ abstract class Parser {
       cases.isNotEmpty ? cases.first.start : elseCase?.start ?? end,
     );
   }
+
+  static void parseWhenStatement(final Compiler compiler) {
+    parseMatchableStatement(compiler, () {
+      parseExpression(compiler);
+    });
+  }
