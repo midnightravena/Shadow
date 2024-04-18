@@ -89,3 +89,35 @@ abstract class Parser {
     compiler.patchAbsoluteJumpTo(jump, start);
     compiler.endLoop();
   }
+
+  static void parseForStatement(final Compiler compiler) {
+    compiler.consume(Tokens.parenLeft);
+    if (!compiler.check(Tokens.semi)) {
+      parseExpression(compiler);
+      compiler.emitOpCode(OpCodes.opPop);
+    }
+    compiler.consume(Tokens.semi);
+    final int conditionOffset = compiler.currentAbsoluteOffset;
+    if (!compiler.check(Tokens.semi)) {
+      parseExpression(compiler);
+    } else {
+      compiler.emitOpCode(OpCodes.opTrue);
+    }
+    compiler.consume(Tokens.semi);
+    final int updateJump = compiler.emitJump(OpCodes.opJump);
+    final int updateOffset = compiler.currentAbsoluteOffset;
+    if (!compiler.check(Tokens.parenRight)) {
+      parseExpression(compiler);
+      compiler.emitOpCode(OpCodes.opPop);
+    }
+    final int conditionJump = compiler.emitJump(OpCodes.opAbsoluteJump);
+    compiler.patchAbsoluteJumpTo(conditionJump, conditionOffset);
+    compiler.patchJump(updateJump);
+    compiler.consume(Tokens.parenRight);
+    compiler.beginLoop(updateOffset);
+    compiler.emitOpCode(OpCodes.opPop);
+    parseStatement(compiler);
+    final int jump = compiler.emitJump(OpCodes.opAbsoluteJump);
+    compiler.patchAbsoluteJumpTo(jump, updateOffset);
+    compiler.endLoop();
+  }
