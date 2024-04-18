@@ -708,3 +708,15 @@ abstract class Parser {
   static void parseBracketCall(final Compiler compiler) {
     parsePropertyCall(compiler);
   }
+
+  static void parseTernary(final Compiler compiler) {
+    final int thenJump = compiler.emitJump(OpCodes.opJumpIfFalse);
+    compiler.emitOpCode(OpCodes.opPop);
+    parseExpression(compiler);
+    final int elseJump = compiler.emitJump(OpCodes.opJump);
+    compiler.patchJump(thenJump);
+    compiler.emitOpCode(OpCodes.opPop);
+    compiler.consume(Tokens.colon);
+    parseExpression(compiler);
+    compiler.patchJump(elseJump);
+  }
