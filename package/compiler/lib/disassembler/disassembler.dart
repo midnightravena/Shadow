@@ -119,3 +119,21 @@ class Disassembler {
 
   static const String _space = '  |  ';
   static const String _spaceOnly = '  ';
+
+  static void disassembleProgram(final ProgramConstant program) {
+    final DisassemblerOutput output = DisassemblerConsoleOutput();
+    for (int i = 0; i < program.modules.length; i += 2) {
+      final int nameIndex = program.modules[i];
+      final int functionIndex = program.modules[i + 1];
+      final String moduleName = program.constantAt(nameIndex) as String;
+      final FunctionConstant function =
+          program.constantAt(functionIndex) as FunctionConstant;
+      output.write(
+        '> $moduleName (constant [$nameIndex]) at constant [$functionIndex] ${nameIndex == 0 ? "(entrypoint)" : ""}',
+      );
+      final Disassembler disassembler =
+          Disassembler(program, function.chunk, output);
+      disassembler.dissassemble();
+      output.write('---');
+    }
+  }
