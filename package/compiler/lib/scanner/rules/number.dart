@@ -31,3 +31,11 @@ abstract class NumberScanner {
       buffer.write(current.char);
       scanner.input.advance();
     }
+
+    return Token(
+      Tokens.number,
+      num.parse(buffer.toString()).toDouble(),
+      BeizeSpan(start.point, current.point),
+    );
+  }
+}
