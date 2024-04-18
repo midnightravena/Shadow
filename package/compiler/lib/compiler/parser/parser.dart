@@ -700,3 +700,7 @@ abstract class Parser {
       compiler.emitOpCode(OpCodes.opGetProperty);
     }
   }
+
+  static void parseDotCall(final Compiler compiler) {
+    parsePropertyCall(compiler, dotCall: true);
+  }
