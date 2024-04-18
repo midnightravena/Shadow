@@ -132,3 +132,14 @@ abstract class Parser {
     compiler.consume(Tokens.semi);
     compiler.emitBreak();
   }
+
+  static void parseContinueStatement(final Compiler compiler) {
+    if (compiler.loops.isEmpty) {
+      throw CompilationException.cannotBreakContinueOutsideLoop(
+        compiler.moduleName,
+        compiler.previousToken,
+      );
+    }
+    compiler.consume(Tokens.semi);
+    compiler.emitContinue();
+  }
