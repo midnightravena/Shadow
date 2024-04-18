@@ -85,3 +85,15 @@ class Disassembler {
           '{so}(popCount = $popCount)',
         );
         return 1;
+
+        case OpCodes.opImport:
+        final int moduleIndex = chunk.codeAt(ip + 1);
+        final int nameIndex = program.modules[moduleIndex];
+        final String moduleName = program.constantAt(nameIndex) as String;
+        writeInstruction(
+          opCode,
+          ip,
+          chunk.lineAt(ip),
+          '{so}(module [$moduleIndex] = $moduleName)',
+        );
+        return 1;
