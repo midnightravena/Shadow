@@ -60,3 +60,19 @@ abstract class Parser {
       compiler.emitOpCode(OpCodes.opPop);
     }
   }
+
+  static void parseIfStatement(final Compiler compiler) {
+    compiler.consume(Tokens.parenLeft);
+    parseExpression(compiler);
+    compiler.consume(Tokens.parenRight);
+    final int thenJump = compiler.emitJump(OpCodes.opJumpIfFalse);
+    compiler.emitOpCode(OpCodes.opPop);
+    parseStatement(compiler);
+    final int elseJump = compiler.emitJump(OpCodes.opJump);
+    compiler.patchJump(thenJump);
+    compiler.emitOpCode(OpCodes.opPop);
+    if (compiler.match(Tokens.elseKw)) {
+      parseStatement(compiler);
+    }
+    compiler.patchJump(elseJump);
+  }
