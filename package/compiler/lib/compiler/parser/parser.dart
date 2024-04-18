@@ -143,3 +143,12 @@ abstract class Parser {
     compiler.consume(Tokens.semi);
     compiler.emitContinue();
   }
+
+  static void parseBlockStatement(final Compiler compiler) {
+    compiler.emitOpCode(OpCodes.opBeginScope);
+    while (!compiler.isEndOfFile() && !compiler.check(Tokens.braceRight)) {
+      parseStatement(compiler);
+    }
+    compiler.emitOpCode(OpCodes.opEndScope);
+    compiler.consume(Tokens.braceRight);
+  }
