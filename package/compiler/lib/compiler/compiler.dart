@@ -125,3 +125,15 @@ class Compiler {
     }
     return currentFunction;
   }
+
+  Token advance() {
+    previousToken = currentToken;
+    currentToken = scanner.readToken();
+    if (currentToken.type == Tokens.illegal) {
+      throw CompilationException.illegalToken(
+        moduleName,
+        currentToken,
+      );
+    }
+    return currentToken;
+  }
