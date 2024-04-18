@@ -130,3 +130,6 @@ class Parserule {
     Tokens.falseKw: Parserule(prefix: Parser.parseBoolean),
     Tokens.nullKw: Parserule(prefix: Parser.parseNull),
   };
+
+  static Parserule of(final Tokens type) => rules[type] ?? none;
+}
