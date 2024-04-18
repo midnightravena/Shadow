@@ -96,3 +96,128 @@ class ScannerRules {
       constructOffset3ScanFn(Tokens.nullOrEqual),
     ],
   );
+
+  static List<ScannerCustomRule> customScanFns = <ScannerCustomRule>[
+    StringScanner.rule,
+    NumberScanner.rule,
+    IdentifierScanner.rule,
+  ];
+
+  static Token scan(
+    final Scanner scanner,
+    final InputIteration current,
+  ) {
+    if (current.char.isEmpty) {
+      return scanEndOfFile(scanner, current);
+    }
+
+    final ScannerRuleReadFn scanFn = getOffset3ScanFn(scanner, current) ??
+        getOffset2ScanFn(scanner, current) ??
+        getOffset1ScanFn(scanner, current) ??
+        getCustomScanFn(scanner, current) ??
+        scanInvalidToken;
+
+    return scanFn(scanner, current);
+  }
+
+  static ScannerRuleReadFn? getCustomScanFn(
+    final Scanner scanner,
+    final InputIteration current,
+  ) {
+    ScannerRuleReadFn? fn;
+    for (final ScannerCustomRule x in customScanFns) {
+      if (x.matches(scanner, current)) {
+        fn = x.scan;
+        break;
+      }
+    }
+    return fn;
+  }
+
+  static ScannerRuleReadFn? getOffset1ScanFn(
+    final Scanner scanner,
+    final InputIteration current,
+  ) =>
+      offset1ScanFns[scanner.input.getCharactersAt(current.point.position, 1)];
+
+  static ScannerRuleReadFn? getOffset2ScanFn(
+    final Scanner scanner,
+    final InputIteration current,
+  ) =>
+      offset2ScanFns[scanner.input.getCharactersAt(current.point.position, 2)];
+
+  static ScannerRuleReadFn? getOffset3ScanFn(
+    final Scanner scanner,
+    final InputIteration current,
+  ) =>
+      offset3ScanFns[scanner.input.getCharactersAt(current.point.position, 3)];
+
+  static MapEntry<String, ScannerRuleReadFn> constructOffset1ScanFn(
+    final Tokens type,
+  ) =>
+      constructOffsetScanFn(type, 1);
+
+  static MapEntry<String, ScannerRuleReadFn> constructOffset2ScanFn(
+    final Tokens type,
+  ) =>
+      constructOffsetScanFn(type, 2);
+
+  static MapEntry<String, ScannerRuleReadFn> constructOffset3ScanFn(
+    final Tokens type,
+  ) =>
+      constructOffsetScanFn(type, 3);
+
+  static MapEntry<String, ScannerRuleReadFn> constructOffsetScanFn(
+    final Tokens type,
+    final int offset,
+  ) =>
+      MapEntry<String, ScannerRuleReadFn>(
+        type.code,
+        (final Scanner scanner, final InputIteration current) {
+          final ShadowStringBuffer buffer = ShadowStringBuffer(current.char);
+
+          InputIteration end = current;
+          for (int i = 0; i < offset - 1; i++) {
+            end = scanner.input.advance();
+            buffer.write(end.char);
+          }
+
+          return Token(
+            type,
+            buffer.toString(),
+            Span(current.point, end.point),
+          );
+        },
+      );
+
+  static Token scanComment(
+    final Scanner scanner,
+    final InputIteration current,
+  ) {
+    while (!scanner.input.isEndOfLine()) {
+      scanner.input.advance();
+    }
+    scanner.input.advance();
+    return scanner.readToken();
+  }
+
+  static Token scanInvalidToken(
+    final Scanner scanner,
+    final InputIteration current,
+  ) =>
+      Token(
+        Tokens.illegal,
+        current.char,
+        Span.fromSingleCursor(current.point),
+      );
+
+  static Token scanEndOfFile(
+    final Scanner scanner,
+    final InputIteration current,
+  ) =>
+      Token(
+        Tokens.eof,
+        current.char,
+        Span.fromSingleCursor(current.point),
+      );
+}
