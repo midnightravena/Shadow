@@ -1,0 +1,13 @@
+createBenchmarker := -> {
+    return {
+        startedAt: null,
+        endedAt: null,
+        start: -> {
+            this.startedAt = DateTime.now().millisecondsSinceEpoch;
+        },
+        end: -> {
+            this.endedAt = DateTime.now().millisecondsSinceEpoch;
+            print('Took ' + (this.endedAt - this.startedAt) + 'ms');
+        },
+    };
+};
