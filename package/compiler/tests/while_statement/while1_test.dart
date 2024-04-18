@@ -6,7 +6,7 @@ Future<void> main() async {
   const String title = '[Statement] While (1)';
   final ProgramConstant program = await compileTestScript(
     'while_statement',
-    'while1.beize',
+    'while1.shadow',
   );
 
   test('$title - Channel', () async {
