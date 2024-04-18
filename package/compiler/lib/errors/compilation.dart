@@ -88,3 +88,12 @@ class CompilationException implements Exception {
         module,
         'Multiple else classes are not allowed ("${token.type.code}" found at ${token.span})',
       );
+
+  factory CompilationException.cannotAwaitOutsideAsyncFunction(
+    final String module,
+    final Token token,
+  ) =>
+      CompilationException(
+        module,
+        'Cannot use "await" outside of "async" function ("${token.type.code}" found at ${token.span})',
+      );
