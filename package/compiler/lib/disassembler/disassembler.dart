@@ -137,3 +137,9 @@ class Disassembler {
       output.write('---');
     }
   }
+
+  static String stringifyConstant(final Constant constant) {
+    if (constant is FunctionConstant) return '<function>';
+    return constant.toString();
+  }
+}
