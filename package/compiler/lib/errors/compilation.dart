@@ -61,3 +61,12 @@ class CompilationException implements Exception {
         module,
         'Cannot return inside script ("${token.type.code}" found at ${token.span})',
       );
+
+  factory CompilationException.cannotBreakContinueOutsideLoop(
+    final String module,
+    final Token token,
+  ) =>
+      CompilationException(
+        module,
+        'Cannot break or continue outside script ("${token.type.code}" found at ${token.span})',
+      );
