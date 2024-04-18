@@ -174,3 +174,10 @@ class Compiler {
   }
 
   bool hasConstant(final Constant value) => constants.contains(value);
+
+  int makeConstant(final Constant value) {
+    final int existingIndex = constants.indexOf(value);
+    if (existingIndex != -1) return existingIndex;
+    constants.add(value);
+    return constants.length - 1;
+  }
