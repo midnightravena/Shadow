@@ -749,3 +749,11 @@ abstract class Parser {
     compiler.patchJump(exitJump);
   }
 }
+
+class _MatchableCase {
+  const _MatchableCase(this.start, this.thenJump, this.elseJump);
+
+  final int start;
+  final int thenJump;
+  final int elseJump;
+}
