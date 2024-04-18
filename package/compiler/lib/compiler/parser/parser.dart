@@ -169,3 +169,9 @@ abstract class Parser {
     compiler.consume(Tokens.semi);
     compiler.emitOpCode(OpCodes.opReturn);
   }
+
+  static void parseThrowStatement(final Compiler compiler) {
+    parseExpression(compiler);
+    compiler.consume(Tokens.semi);
+    compiler.emitOpCode(OpCodes.opThrow);
+  }
