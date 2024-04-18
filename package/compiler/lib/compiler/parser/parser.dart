@@ -343,3 +343,21 @@ abstract class Parser {
   static void parseExpression(final Compiler compiler) {
     parsePrecedence(compiler, Precedence.assignment);
   }
+
+  static void parsePrecedence(
+    final Compiler compiler,
+    final Precedence precedence,
+  ) {
+    compiler.advance();
+    final Parserule rule = Parserule.of(compiler.previousToken.type);
+    if (rule.prefix == null) {
+      throw CompilationException.expectedXButReceivedToken(
+        compiler.moduleName,
+        'expression',
+        compiler.previousToken.type,
+        compiler.previousToken.span,
+      );
+    }
+    rule.prefix!(compiler);
+    parseInfixExpression(compiler, precedence);
+  }
