@@ -121,3 +121,14 @@ abstract class Parser {
     compiler.patchAbsoluteJumpTo(jump, updateOffset);
     compiler.endLoop();
   }
+
+  static void parseBreakStatement(final Compiler compiler) {
+    if (compiler.loops.isEmpty) {
+      throw CompilationException.cannotBreakContinueOutsideLoop(
+        compiler.moduleName,
+        compiler.previousToken,
+      );
+    }
+    compiler.consume(Tokens.semi);
+    compiler.emitBreak();
+  }
