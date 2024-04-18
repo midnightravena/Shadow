@@ -257,3 +257,55 @@ abstract class Parser {
       compiler.emitCode(asIndex);
     }
   }
+
+  static void parseMatchableStatement(
+    final Compiler compiler,
+    final void Function() matcher,
+  ) {
+    final List<_MatchableCase> cases = <_MatchableCase>[];
+    _MatchableCase? elseCase;
+    final int startJump = compiler.emitJump(OpCodes.opAbsoluteJump);
+    compiler.consume(Tokens.braceLeft);
+    while (!compiler.match(Tokens.braceRight)) {
+      final int start = compiler.currentAbsoluteOffset;
+      if (compiler.match(Tokens.elseKw)) {
+        if (elseCase != null) {
+          throw CompilationException.duplicateElse(
+            compiler.moduleName,
+            compiler.previousToken,
+          );
+        }
+        compiler.consume(Tokens.colon);
+        parseStatement(compiler);
+        final int exitJump = compiler.emitJump(OpCodes.opAbsoluteJump);
+        elseCase = _MatchableCase(start, exitJump, -1);
+      } else {
+        matcher();
+        compiler.consume(Tokens.colon);
+        final int localJump = compiler.emitJump(OpCodes.opJumpIfFalse);
+        parseStatement(compiler);
+        compiler.emitOpCode(OpCodes.opPop);
+        final int exitJump = compiler.emitJump(OpCodes.opAbsoluteJump);
+        compiler.patchJump(localJump);
+        compiler.emitOpCode(OpCodes.opPop);
+        final int thenJump = compiler.emitJump(OpCodes.opAbsoluteJump);
+        cases.add(_MatchableCase(start, thenJump, exitJump));
+      }
+    }
+    final int end = compiler.currentAbsoluteOffset;
+    for (int i = 0; i < cases.length; i++) {
+      final _MatchableCase x = cases[i];
+      compiler.patchAbsoluteJumpTo(
+        x.thenJump,
+        i + 1 < cases.length ? cases[i + 1].start : elseCase?.start ?? end,
+      );
+      compiler.patchAbsoluteJumpTo(x.elseJump, end);
+    }
+    if (elseCase != null) {
+      compiler.patchAbsoluteJumpTo(elseCase.thenJump, end);
+    }
+    compiler.patchAbsoluteJumpTo(
+      startJump,
+      cases.isNotEmpty ? cases.first.start : elseCase?.start ?? end,
+    );
+  }
