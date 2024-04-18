@@ -26,3 +26,16 @@ class CompilationException implements Exception {
         module,
         'Expected "$expected" but found "$received" at $position',
       );
+
+  factory CompilationException.expectedXButReceivedToken(
+    final String module,
+    final String expected,
+    final Tokens received,
+    final BeizeSpan span,
+  ) =>
+      CompilationException.expectedXButReceivedX(
+        module,
+        expected,
+        received.code,
+        span.toString(),
+      );
