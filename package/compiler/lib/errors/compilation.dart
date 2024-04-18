@@ -52,3 +52,12 @@ class CompilationException implements Exception {
         received.code,
         span.toString(),
       );
+
+  factory CompilationException.cannotReturnInsideScript(
+    final String module,
+    final Token token,
+  ) =>
+      CompilationException(
+        module,
+        'Cannot return inside script ("${token.type.code}" found at ${token.span})',
+      );
