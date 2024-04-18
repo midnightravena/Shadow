@@ -68,3 +68,21 @@ class Compiler {
       currentToken = scanner.readToken();
     }
   }
+
+  Compiler createFunctionCompiler({
+    required final bool isAsync,
+  }) {
+    final Compiler derived = Compiler._(
+      scanner,
+      mode: CompilerMode.function,
+      root: root,
+      modulePath: modulePath,
+      moduleIndex: moduleIndex,
+      modules: modules,
+      constants: constants,
+      parent: this,
+      options: options,
+    );
+    derived.prepare(isAsync: isAsync);
+    return derived;
+  }
