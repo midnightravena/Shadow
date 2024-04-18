@@ -118,3 +118,10 @@ class Compiler {
     final String relativePath = p.relative(path, from: root);
     return relativePath;
   }
+
+  Future<FunctionConstant> compile() async {
+    while (!isEndOfFile()) {
+      await Parser.parseStatement(this);
+    }
+    return currentFunction;
+  }
