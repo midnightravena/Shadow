@@ -97,3 +97,11 @@ class CompilationException implements Exception {
         module,
         'Cannot use "await" outside of "async" function ("${token.type.code}" found at ${token.span})',
       );
+
+  final String module;
+  final String text;
+
+  @override
+  String toString() =>
+      'CompilationException: Compiling "$module" failed - $text';
+}
