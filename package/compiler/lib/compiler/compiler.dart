@@ -181,3 +181,9 @@ class Compiler {
     constants.add(value);
     return constants.length - 1;
   }
+
+  int emitJump(final OpCodes opCode) {
+    emitOpCode(opCode);
+    emitCode(-1);
+    return currentChunk.length - 1;
+  }
