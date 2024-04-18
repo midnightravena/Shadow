@@ -113,3 +113,8 @@ class Compiler {
     final String absolutePath = p.join(importDir, path);
     return p.normalize(absolutePath);
   }
+
+  String resolveRelativePath(final String path) {
+    final String relativePath = p.relative(path, from: root);
+    return relativePath;
+  }
