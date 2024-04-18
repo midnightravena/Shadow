@@ -145,3 +145,14 @@ class Compiler {
     advance();
     return true;
   }
+
+  void ensure(final Tokens type) {
+    if (!check(type)) {
+      throw CompilationException.expectedTokenButReceivedToken(
+        moduleName,
+        type,
+        currentToken.type,
+        currentToken.span,
+      );
+    }
+  }
