@@ -103,3 +103,12 @@ class Disassembler {
         return 0;
     }
   }
+
+  void writeInstruction(
+    final OpCodes opCode,
+    final int offset,
+    final int position, [
+    final String extra = '',
+  ]) {
+    write('$offset{s}${opCode.name}{s}$position$extra');
+  }
