@@ -670,3 +670,33 @@ abstract class Parser {
     compiler.emitOpCode(OpCodes.opObject);
     compiler.emitCode(count);
   }
+
+  static void parsePropertyCall(
+    final Compiler compiler, {
+    final bool dotCall = false,
+  }) {
+    if (dotCall && compiler.match(Tokens.awaitKw)) {
+      if (!compiler.currentFunction.isAsync) {
+        throw CompilationException.cannotAwaitOutsideAsyncFunction(
+          compiler.moduleName,
+          compiler.previousToken,
+        );
+      }
+      compiler.emitOpCode(OpCodes.opAwait);
+      return;
+    }
+    if (dotCall) {
+      compiler.consume(Tokens.identifier);
+      final String key = compiler.previousToken.literal as String;
+      compiler.emitConstant(key);
+    } else {
+      parseExpression(compiler);
+      compiler.consume(Tokens.bracketRight);
+    }
+    if (compiler.match(Tokens.assign)) {
+      parseExpression(compiler);
+      compiler.emitOpCode(OpCodes.opSetProperty);
+    } else {
+      compiler.emitOpCode(OpCodes.opGetProperty);
+    }
+  }
