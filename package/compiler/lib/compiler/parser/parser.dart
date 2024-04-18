@@ -463,3 +463,11 @@ abstract class Parser {
   static void parseString(final Compiler compiler) {
     compiler.emitConstant(compiler.previousToken.literal as String);
   }
+
+  static void parseBoolean(final Compiler compiler) {
+    compiler.emitOpCode(
+      compiler.previousToken.type == Tokens.trueKw
+          ? OpCodes.opTrue
+          : OpCodes.opFalse,
+    );
+  }
