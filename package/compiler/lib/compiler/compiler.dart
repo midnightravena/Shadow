@@ -165,3 +165,12 @@ class Compiler {
   void emitCode(final int code) {
     currentChunk.addCode(code, previousToken.span.start.row + 1);
   }
+
+  void emitOpCode(final OpCodes opCode) => emitCode(opCode.index);
+
+  void emitConstant(final Constant value) {
+    emitOpCode(OpCodes.opConstant);
+    emitCode(makeConstant(value));
+  }
+
+  bool hasConstant(final Constant value) => constants.contains(value);
