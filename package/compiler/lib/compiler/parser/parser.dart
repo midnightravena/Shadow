@@ -635,3 +635,16 @@ abstract class Parser {
     compiler.emitOpCode(OpCodes.opCall);
     compiler.emitCode(count);
   }
+
+  static void parseList(final Compiler compiler) {
+    int count = 0;
+    bool cont = true;
+    while (cont && !compiler.check(Tokens.bracketRight)) {
+      parseExpression(compiler);
+      count++;
+      cont = compiler.match(Tokens.comma);
+    }
+    compiler.consume(Tokens.bracketRight);
+    compiler.emitOpCode(OpCodes.opList);
+    compiler.emitCode(count);
+  }
