@@ -161,3 +161,7 @@ class Compiler {
     ensure(type);
     advance();
   }
+
+  void emitCode(final int code) {
+    currentChunk.addCode(code, previousToken.span.start.row + 1);
+  }
