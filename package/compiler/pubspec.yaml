@@ -1,0 +1,31 @@
+name: compiler
+description: Compiler of Shadow.
+version: 0.0.1
+
+publish_to: none
+
+environment:
+    sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+    shared:
+        git:
+            url: https://github.com/midnightravena/Shadow.git
+            path: packages/shared
+    path: ^1.8.3
+
+dependency_overrides:
+    shared:
+        path: ../shared
+    vm:
+        path: ../vm
+
+dev_dependencies:
+    vm:
+        git:
+            url: https://github.com/midnightravena/Shadow.git
+            path: packages/vm
+    test: ^1.24.3
+    lint:
+        git:
+            url: https://github.com/sahilarun/dart_lint.git
