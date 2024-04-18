@@ -112,3 +112,10 @@ class Disassembler {
   ]) {
     write('$offset{s}${opCode.name}{s}$position$extra');
   }
+
+  void write(final String text) {
+    output.write(text.replaceAll('{s}', _space).replaceAll('{so}', _spaceOnly));
+  }
+
+  static const String _space = '  |  ';
+  static const String _spaceOnly = '  ';
