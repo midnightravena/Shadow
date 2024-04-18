@@ -62,3 +62,14 @@ class Disassembler {
           '{so}(offset = $offset, absoluteOffset = $absoluteOffset)',
         );
         return 1;
+
+        case OpCodes.opAbsoluteJump:
+        case OpCodes.opBeginTry:
+        final int offset = chunk.codeAt(ip + 1);
+        writeInstruction(
+          opCode,
+          ip,
+          chunk.lineAt(ip),
+          '{so}(absoluteOffset = $offset)',
+        );
+        return 1;
