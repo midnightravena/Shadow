@@ -471,3 +471,7 @@ abstract class Parser {
           : OpCodes.opFalse,
     );
   }
+
+  static void parseNull(final Compiler compiler) {
+    compiler.emitOpCode(OpCodes.opNull);
+  }
