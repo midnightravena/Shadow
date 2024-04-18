@@ -704,3 +704,7 @@ abstract class Parser {
   static void parseDotCall(final Compiler compiler) {
     parsePropertyCall(compiler, dotCall: true);
   }
+
+  static void parseBracketCall(final Compiler compiler) {
+    parsePropertyCall(compiler);
+  }
