@@ -152,3 +152,20 @@ abstract class Parser {
     compiler.emitOpCode(OpCodes.opEndScope);
     compiler.consume(Tokens.braceRight);
   }
+
+
+  static void parseReturnStatement(final Compiler compiler) {
+    if (compiler.mode != CompilerMode.function) {
+      throw CompilationException.cannotReturnInsideScript(
+        compiler.moduleName,
+        compiler.previousToken,
+      );
+    }
+    if (!compiler.check(Tokens.semi)) {
+      parseExpression(compiler);
+    } else {
+      compiler.emitOpCode(OpCodes.opNull);
+    }
+    compiler.consume(Tokens.semi);
+    compiler.emitOpCode(OpCodes.opReturn);
+  }
