@@ -327,3 +327,9 @@ abstract class Parser {
     });
     compiler.emitOpCode(OpCodes.opPop);
   }
+
+  static int parseIdentifierConstant(final Compiler compiler) {
+    final String name = compiler.previousToken.literal as String;
+    final int index = compiler.makeConstant(name);
+    return index;
+  }
