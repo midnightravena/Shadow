@@ -21,3 +21,31 @@ class Disassembler {
       ip++;
     }
   }
+
+  int dissassembleInstruction() {
+    final OpCodes opCode = chunk.opCodeAt(ip);
+    switch (opCode) {
+      case OpCodes.opConstant:
+      case OpCodes.opDeclare:
+      case OpCodes.opAssign:
+      case OpCodes.opLookup:
+        final int constantPosition = chunk.codeAt(ip + 1);
+        final Constant constant = program.constantAt(constantPosition);
+        writeInstruction(
+          opCode,
+          ip,
+          chunk.lineAt(ip),
+          '{so}(constant [$constantPosition] = ${stringifyConstant(constant)})',
+        );
+        if (constant is FunctionConstant) {
+          final List<String> argNames = constant.arguments
+              .map((final int x) => '${program.constantAt(x)} (constant [$x])')
+              .toList();
+          output.write(
+            '-> ${constant.isAsync ? 'async' : ''} ${argNames.join(', ')}',
+          );
+          Disassembler(program, constant.chunk, output.nested)
+              .dissassemble(printHeader: false);
+          output.write('<-');
+        }
+        return 1;
