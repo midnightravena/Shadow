@@ -70,3 +70,12 @@ class CompilationException implements Exception {
         module,
         'Cannot break or continue outside script ("${token.type.code}" found at ${token.span})',
       );
+
+  factory CompilationException.topLevelImports(
+    final String module,
+    final Token token,
+  ) =>
+      CompilationException(
+        module,
+        'Only top-level imports are allowed ("${token.type.code}" found at ${token.span})',
+      );
