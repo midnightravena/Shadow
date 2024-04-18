@@ -15,3 +15,14 @@ class CompilationException implements Exception {
             '(${token.error}${token.errorSpan != null ? ' at ${token.errorSpan}' : ''})',
         ].join(' '),
       );
+
+  factory CompilationException.expectedXButReceivedX(
+    final String module,
+    final String expected,
+    final String received,
+    final String position,
+  ) =>
+      CompilationException(
+        module,
+        'Expected "$expected" but found "$received" at $position',
+      );
