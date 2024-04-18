@@ -97,3 +97,9 @@ class Disassembler {
           '{so}(module [$moduleIndex] = $moduleName)',
         );
         return 1;
+
+        default:
+        writeInstruction(opCode, ip, chunk.lineAt(ip));
+        return 0;
+    }
+  }
