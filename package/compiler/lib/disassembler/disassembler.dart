@@ -73,3 +73,15 @@ class Disassembler {
           '{so}(absoluteOffset = $offset)',
         );
         return 1;
+
+      case OpCodes.opCall:
+      case OpCodes.opList:
+      case OpCodes.opObject:
+        final int popCount = chunk.codeAt(ip + 1);
+        writeInstruction(
+          opCode,
+          ip,
+          chunk.lineAt(ip),
+          '{so}(popCount = $popCount)',
+        );
+        return 1;
