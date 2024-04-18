@@ -459,3 +459,7 @@ abstract class Parser {
   static void parseNumber(final Compiler compiler) {
     compiler.emitConstant(compiler.previousToken.literal as double);
   }
+
+  static void parseString(final Compiler compiler) {
+    compiler.emitConstant(compiler.previousToken.literal as String);
+  }
