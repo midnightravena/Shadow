@@ -85,3 +85,14 @@ class ScannerRules {
       constructOffset2ScanFn(Tokens.caretEqual),
     ],
   );
+
+  static final Map<String, ScannerRuleReadFn> offset3ScanFns =
+      Map<String, ScannerRuleReadFn>.fromEntries(
+    <MapEntry<String, ScannerRuleReadFn>>[
+      constructOffset3ScanFn(Tokens.exponentEqual),
+      constructOffset3ScanFn(Tokens.floorEqual),
+      constructOffset3ScanFn(Tokens.logicalAndEqual),
+      constructOffset3ScanFn(Tokens.logicalOrEqual),
+      constructOffset3ScanFn(Tokens.nullOrEqual),
+    ],
+  );
