@@ -315,3 +315,15 @@ abstract class Parser {
       parseExpression(compiler);
     });
   }
+
+  static void parseMatchStatement(final Compiler compiler) {
+    compiler.consume(Tokens.parenLeft);
+    parseExpression(compiler);
+    compiler.consume(Tokens.parenRight);
+    parseMatchableStatement(compiler, () {
+      compiler.emitOpCode(OpCodes.opTop);
+      parseExpression(compiler);
+      compiler.emitOpCode(OpCodes.opEqual);
+    });
+    compiler.emitOpCode(OpCodes.opPop);
+  }
