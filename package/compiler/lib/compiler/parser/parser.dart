@@ -394,3 +394,64 @@ abstract class Parser {
         throw UnreachableException();
     }
   }
+
+  static void parseBinaryExpression(final Compiler compiler) {
+    final Tokens operator = compiler.previousToken.type;
+    final Parserule rule = Parserule.of(operator);
+    parsePrecedence(compiler, rule.precedence.nextPrecedence);
+    switch (operator) {
+      case Tokens.equal:
+        compiler.emitOpCode(OpCodes.opEqual);
+
+      case Tokens.notEqual:
+        compiler.emitOpCode(OpCodes.opEqual);
+        compiler.emitOpCode(OpCodes.opNot);
+
+      case Tokens.lesserThan:
+        compiler.emitOpCode(OpCodes.opLess);
+
+      case Tokens.lesserThanEqual:
+        compiler.emitOpCode(OpCodes.opGreater);
+        compiler.emitOpCode(OpCodes.opNot);
+
+      case Tokens.greaterThan:
+        compiler.emitOpCode(OpCodes.opGreater);
+
+      case Tokens.greaterThanEqual:
+        compiler.emitOpCode(OpCodes.opLess);
+        compiler.emitOpCode(OpCodes.opNot);
+
+      case Tokens.plus:
+        compiler.emitOpCode(OpCodes.opAdd);
+
+      case Tokens.minus:
+        compiler.emitOpCode(OpCodes.opSubtract);
+
+      case Tokens.asterisk:
+        compiler.emitOpCode(OpCodes.opMultiply);
+
+      case Tokens.slash:
+        compiler.emitOpCode(OpCodes.opDivide);
+
+      case Tokens.floor:
+        compiler.emitOpCode(OpCodes.opFloor);
+
+      case Tokens.modulo:
+        compiler.emitOpCode(OpCodes.opModulo);
+
+      case Tokens.exponent:
+        compiler.emitOpCode(OpCodes.opExponent);
+
+      case Tokens.ampersand:
+        compiler.emitOpCode(OpCodes.opBitwiseAnd);
+
+      case Tokens.pipe:
+        compiler.emitOpCode(OpCodes.opBitwiseOr);
+
+      case Tokens.caret:
+        compiler.emitOpCode(OpCodes.opBitwiseXor);
+
+      default:
+        throw UnreachableException();
+    }
+  }
