@@ -79,3 +79,12 @@ class CompilationException implements Exception {
         module,
         'Only top-level imports are allowed ("${token.type.code}" found at ${token.span})',
       );
+
+  factory CompilationException.duplicateElse(
+    final String module,
+    final Token token,
+  ) =>
+      CompilationException(
+        module,
+        'Multiple else classes are not allowed ("${token.type.code}" found at ${token.span})',
+      );
