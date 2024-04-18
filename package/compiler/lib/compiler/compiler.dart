@@ -50,3 +50,21 @@ class Compiler {
 
   late int scopeDepth;
   late final List<CompilerLoopState> loops;
+
+  void prepare({
+    required final bool isAsync,
+  }) {
+    currentFunction = FunctionConstant(
+      moduleIndex: moduleIndex,
+      isAsync: isAsync,
+      arguments: <int>[],
+      chunk: Chunk.empty(),
+    );
+    scopeDepth = 0;
+    loops = <CompilerLoopState>[];
+    if (parent != null) {
+      copyTokenState(parent!);
+    } else {
+      currentToken = scanner.readToken();
+    }
+  }
