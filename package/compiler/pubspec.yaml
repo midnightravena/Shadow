@@ -26,6 +26,6 @@ dev_dependencies:
             url: https://github.com/midnightravena/Shadow.git
             path: packages/vm
     test: ^1.24.3
-    lint:
+    dart_lint:
         git:
             url: https://github.com/sahilarun/dart_lint.git
