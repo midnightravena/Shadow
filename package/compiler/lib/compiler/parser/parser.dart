@@ -720,3 +720,17 @@ abstract class Parser {
     parseExpression(compiler);
     compiler.patchJump(elseJump);
   }
+
+  static void parseNullOr(
+    final Compiler compiler, {
+    final Precedence precedence = Precedence.or,
+    final void Function()? beforePatch,
+  }) {
+    final int elseJump = compiler.emitJump(OpCodes.opJumpIfNull);
+    final int endJump = compiler.emitJump(OpCodes.opJump);
+    compiler.patchJump(elseJump);
+    compiler.emitOpCode(OpCodes.opPop);
+    parsePrecedence(compiler, precedence);
+    beforePatch?.call();
+    compiler.patchJump(endJump);
+  }
