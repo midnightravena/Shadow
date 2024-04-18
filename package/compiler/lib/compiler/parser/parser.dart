@@ -734,3 +734,18 @@ abstract class Parser {
     beforePatch?.call();
     compiler.patchJump(endJump);
   }
+
+  static void parseNullAccess(final Compiler compiler) {
+    final int exitJump = compiler.emitJump(OpCodes.opJumpIfNull);
+    if (compiler.match(Tokens.parenLeft)) {
+      parseCall(compiler);
+    } else {
+      parsePropertyCall(
+        compiler,
+        dotCall: !compiler.match(Tokens.bracketLeft),
+      );
+    }
+    parseInfixExpression(compiler, Precedence.call);
+    compiler.patchJump(exitJump);
+  }
+}
