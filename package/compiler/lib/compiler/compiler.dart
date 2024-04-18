@@ -33,3 +33,20 @@ class Compiler {
     required this.options,
     this.parent,
   });
+
+  final Compiler? parent;
+  final CompilerOptions options;
+  final Scanner scanner;
+  final CompilerMode mode;
+  final String root;
+  final String modulePath;
+  final int moduleIndex;
+  final List<int> modules;
+  final List<Constant> constants;
+
+  late Token previousToken;
+  late Token currentToken;
+  late FunctionConstant currentFunction;
+
+  late int scopeDepth;
+  late final List<CompilerLoopState> loops;
