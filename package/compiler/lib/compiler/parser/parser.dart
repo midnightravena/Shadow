@@ -48,3 +48,15 @@ abstract class Parser {
     }
     return parseExpressionStatement(compiler);
   }
+
+  static void parsePrintStatement(final Compiler compiler) {
+    compiler.consume(Tokens.parenLeft);
+    parseExpression(compiler);
+    compiler.consume(Tokens.parenRight);
+    compiler.consume(Tokens.semi);
+    if (!compiler.options.disablePrint) {
+      compiler.emitOpCode(OpCodes.opPrint);
+    } else {
+      compiler.emitOpCode(OpCodes.opPop);
+    }
+  }
