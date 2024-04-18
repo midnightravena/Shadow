@@ -339,3 +339,7 @@ abstract class Parser {
     compiler.consume(Tokens.semi);
     compiler.emitOpCode(OpCodes.opPop);
   }
+
+  static void parseExpression(final Compiler compiler) {
+    parsePrecedence(compiler, Precedence.assignment);
+  }
