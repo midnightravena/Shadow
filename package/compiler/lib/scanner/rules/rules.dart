@@ -57,3 +57,31 @@ class ScannerRules {
       constructOffset1ScanFn(Tokens.greaterThan),
     ],
   );
+
+  static final Map<String, ScannerRuleReadFn> offset2ScanFns =
+      Map<String, ScannerRuleReadFn>.fromEntries(
+    <MapEntry<String, ScannerRuleReadFn>>[
+      constructOffset2ScanFn(Tokens.nullAccess),
+      constructOffset2ScanFn(Tokens.nullOr),
+      constructOffset2ScanFn(Tokens.declare),
+      constructOffset2ScanFn(Tokens.exponent),
+      constructOffset2ScanFn(Tokens.floor),
+      constructOffset2ScanFn(Tokens.logicalAnd),
+      constructOffset2ScanFn(Tokens.logicalOr),
+      constructOffset2ScanFn(Tokens.equal),
+      constructOffset2ScanFn(Tokens.notEqual),
+      constructOffset2ScanFn(Tokens.lesserThanEqual),
+      constructOffset2ScanFn(Tokens.greaterThanEqual),
+      constructOffset2ScanFn(Tokens.rightArrow),
+      constructOffset2ScanFn(Tokens.increment),
+      constructOffset2ScanFn(Tokens.decrement),
+      constructOffset2ScanFn(Tokens.plusEqual),
+      constructOffset2ScanFn(Tokens.minusEqual),
+      constructOffset2ScanFn(Tokens.asteriskEqual),
+      constructOffset2ScanFn(Tokens.slashEqual),
+      constructOffset2ScanFn(Tokens.moduloEqual),
+      constructOffset2ScanFn(Tokens.ampersandEqual),
+      constructOffset2ScanFn(Tokens.pipeEqual),
+      constructOffset2ScanFn(Tokens.caretEqual),
+    ],
+  );
