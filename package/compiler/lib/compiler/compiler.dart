@@ -156,3 +156,8 @@ class Compiler {
       );
     }
   }
+
+  void consume(final Tokens type) {
+    ensure(type);
+    advance();
+  }
