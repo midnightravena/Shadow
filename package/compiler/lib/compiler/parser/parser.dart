@@ -475,3 +475,8 @@ abstract class Parser {
   static void parseNull(final Compiler compiler) {
     compiler.emitOpCode(OpCodes.opNull);
   }
+
+  static void parseGrouping(final Compiler compiler) {
+    parseExpression(compiler);
+    compiler.consume(Tokens.parenRight);
+  }
