@@ -599,3 +599,26 @@ abstract class Parser {
     beforePatch?.call();
     compiler.patchJump(endJump);
   }
+
+  static void parseFunction(final Compiler compiler) {
+    final bool isAsync = compiler.match(Tokens.asyncKw);
+    final Compiler functionCompiler =
+        compiler.createFunctionCompiler(isAsync: isAsync);
+    bool cont = true;
+    while (cont && functionCompiler.check(Tokens.identifier)) {
+      functionCompiler.consume(Tokens.identifier);
+      final String argName = functionCompiler.previousToken.literal as String;
+      final int argIndex = compiler.makeConstant(argName);
+      functionCompiler.currentFunction.arguments.add(argIndex);
+      cont = functionCompiler.match(Tokens.comma);
+    }
+    if (functionCompiler.match(Tokens.colon)) {
+      parseExpression(functionCompiler);
+      functionCompiler.emitOpCode(OpCodes.opReturn);
+    } else {
+      functionCompiler.match(Tokens.braceLeft);
+      parseBlockStatement(functionCompiler);
+    }
+    compiler.emitConstant(functionCompiler.currentFunction);
+    compiler.copyTokenState(functionCompiler);
+  }
