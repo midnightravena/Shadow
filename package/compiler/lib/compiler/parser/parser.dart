@@ -333,3 +333,9 @@ abstract class Parser {
     final int index = compiler.makeConstant(name);
     return index;
   }
+
+  static void parseExpressionStatement(final Compiler compiler) {
+    parseExpression(compiler);
+    compiler.consume(Tokens.semi);
+    compiler.emitOpCode(OpCodes.opPop);
+  }
