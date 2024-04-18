@@ -1,0 +1,18 @@
+{
+    "name": "abyssal",
+    "version": "0.0.1",
+    "description": "",
+    "private": true,
+    "directories": {
+        "doc": "docs"
+    },
+    "scripts": {
+        "docs:dev": "mkdocs serve",
+        "docs:build": "mkdocs build -d docs-dist",
+        "docs:deploy": "gh workflow run docs.yml",
+        "actions:test": "gh workflow run test.yml",
+        "actions:release": "gh workflow run release.yml"
+    },
+    "author": "Sahil",
+    "license": "GPL-3.0"
+}
