@@ -49,3 +49,16 @@ class Disassembler {
           output.write('<-');
         }
         return 1;
+
+      case OpCodes.opJump:
+      case OpCodes.opJumpIfFalse:
+      case OpCodes.opJumpIfNull:
+        final int offset = chunk.codeAt(ip + 1);
+        final int absoluteOffset = ip + offset;
+        writeInstruction(
+          opCode,
+          ip,
+          chunk.lineAt(ip),
+          '{so}(offset = $offset, absoluteOffset = $absoluteOffset)',
+        );
+        return 1;
