@@ -76,3 +76,16 @@ abstract class Parser {
     }
     compiler.patchJump(elseJump);
   }
+
+  static void parseWhileStatement(final Compiler compiler) {
+    final int start = compiler.currentAbsoluteOffset;
+    compiler.consume(Tokens.parenLeft);
+    parseExpression(compiler);
+    compiler.consume(Tokens.parenRight);
+    compiler.beginLoop(start);
+    compiler.emitOpCode(OpCodes.opPop);
+    parseStatement(compiler);
+    final int jump = compiler.emitJump(OpCodes.opAbsoluteJump);
+    compiler.patchAbsoluteJumpTo(jump, start);
+    compiler.endLoop();
+  }
