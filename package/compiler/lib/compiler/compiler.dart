@@ -187,3 +187,105 @@ class Compiler {
     emitCode(-1);
     return currentChunk.length - 1;
   }
+
+  void patchJump(final int offset) {
+    final int jump = currentChunk.length - offset - 1;
+    currentChunk.codes[offset] = jump;
+  }
+
+  void patchAbsoluteJump(final int offset) {
+    final int jump = currentChunk.length;
+    currentChunk.codes[offset] = jump;
+  }
+
+  void patchAbsoluteJumpTo(final int offset, final int to) {
+    currentChunk.codes[offset] = to;
+  }
+
+  void beginLoop(final int start) {
+    final int endJump = emitJump(OpCodes.opJumpIfFalse);
+    final CompilerLoopState loop = CompilerLoopState(
+      scopeDepth: scopeDepth,
+      start: start,
+      endJump: endJump,
+    );
+    loops.add(loop);
+  }
+
+  void endLoop() {
+    final CompilerLoopState loop = loops.removeLast();
+    patchJump(loop.endJump);
+    emitOpCode(OpCodes.opPop);
+    loop.exitJumps.forEach(patchJump);
+  }
+
+  void endLoopScope() {
+    final int count = scopeDepth - loops.last.scopeDepth;
+    for (int i = 0; i < count; i++) {
+      emitOpCode(OpCodes.opEndScope);
+    }
+  }
+
+  void emitBreak() {
+    endLoopScope();
+    final int offset = emitJump(OpCodes.opJump);
+    loops.last.exitJumps.add(offset);
+  }
+
+  void emitContinue() {
+    final int jump = emitJump(OpCodes.opAbsoluteJump);
+    patchAbsoluteJumpTo(jump, loops.last.start);
+  }
+
+  void beginScope() {
+    scopeDepth++;
+  }
+
+  void endScope() {
+    scopeDepth--;
+  }
+
+  void copyTokenState(final Compiler compiler) {
+    previousToken = compiler.previousToken;
+    currentToken = compiler.currentToken;
+  }
+
+  bool isEndOfFile() => currentToken.type == Tokens.eof;
+
+  String get moduleName => constants[moduleIndex] as String;
+
+  Chunk get currentChunk => currentFunction.chunk;
+
+  int get currentAbsoluteOffset => currentChunk.length;
+
+  static Future<ProgramConstant> compileProject({
+    required final String root,
+    required final String entrypoint,
+    required final CompilerOptions options,
+  }) async {
+    final String fullPath = p.join(root, entrypoint);
+    final File file = File(fullPath);
+    final Input input = await Input.fromFile(file);
+    final Compiler compiler = Compiler._(
+      Scanner(input),
+      options: options,
+      mode: CompilerMode.script,
+      root: root,
+      modulePath: fullPath,
+      moduleIndex: 0,
+      modules: <int>[],
+      constants: <Constant>[],
+    );
+    compiler.prepare(isAsync: true);
+    final int nameIndex =
+        compiler.makeConstant(compiler.resolveRelativePath(fullPath));
+    final int functionIndex = compiler.makeConstant(compiler.currentFunction);
+    compiler.modules.add(nameIndex);
+    compiler.modules.add(functionIndex);
+    await compiler.compile();
+    return ProgramConstant(
+      modules: compiler.modules,
+      constants: compiler.constants,
+    );
+  }
+}
