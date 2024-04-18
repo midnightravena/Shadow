@@ -455,3 +455,7 @@ abstract class Parser {
         throw UnreachableException();
     }
   }
+
+  static void parseNumber(final Compiler compiler) {
+    compiler.emitConstant(compiler.previousToken.literal as double);
+  }
