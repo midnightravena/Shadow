@@ -86,3 +86,24 @@ class Compiler {
     derived.prepare(isAsync: isAsync);
     return derived;
   }
+
+  Future<Compiler> createModuleCompiler(
+    final int moduleIndex,
+    final String path, {
+    required final bool isAsync,
+  }) async {
+    final File file = File(path);
+    final Input input = await Input.fromFile(file);
+    final Compiler derived = Compiler._(
+      Scanner(input),
+      mode: CompilerMode.script,
+      root: root,
+      modulePath: path,
+      moduleIndex: moduleIndex,
+      modules: modules,
+      constants: constants,
+      options: options,
+    );
+    derived.prepare(isAsync: isAsync);
+    return derived;
+  }
