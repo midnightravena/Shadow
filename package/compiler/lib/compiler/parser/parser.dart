@@ -361,3 +361,15 @@ abstract class Parser {
     rule.prefix!(compiler);
     parseInfixExpression(compiler, precedence);
   }
+
+  static void parseInfixExpression(
+    final Compiler compiler,
+    final Precedence precedence,
+  ) {
+    Parserule nextRule = Parserule.of(compiler.currentToken.type);
+    while (precedence.value <= nextRule.precedence.value) {
+      compiler.advance();
+      nextRule.infix!(compiler);
+      nextRule = Parserule.of(compiler.currentToken.type);
+    }
+  } 
