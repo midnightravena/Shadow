@@ -175,3 +175,24 @@ abstract class Parser {
     compiler.consume(Tokens.semi);
     compiler.emitOpCode(OpCodes.opThrow);
   }
+
+  static void parseTryCatchStatement(final Compiler compiler) {
+    compiler.consume(Tokens.braceLeft);
+    final int tryJump = compiler.emitJump(OpCodes.opBeginTry);
+    parseBlockStatement(compiler);
+    compiler.emitOpCode(OpCodes.opEndTry);
+    final int catchJump = compiler.emitJump(OpCodes.opJump);
+    compiler.patchAbsoluteJump(tryJump);
+    compiler.consume(Tokens.catchKw);
+    compiler.consume(Tokens.parenLeft);
+    compiler.consume(Tokens.identifier);
+    final int index = parseIdentifierConstant(compiler);
+    compiler.consume(Tokens.parenRight);
+    compiler.emitOpCode(OpCodes.opBeginScope);
+    compiler.emitOpCode(OpCodes.opDeclare);
+    compiler.emitCode(index);
+    compiler.consume(Tokens.braceLeft);
+    parseBlockStatement(compiler);
+    compiler.emitOpCode(OpCodes.opEndScope);
+    compiler.patchJump(catchJump);
+  }
