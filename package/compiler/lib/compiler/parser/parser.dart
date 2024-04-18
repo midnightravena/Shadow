@@ -573,3 +573,15 @@ abstract class Parser {
       compiler.emitCode(index);
     }
   }
+
+  static void parseLogicalAnd(
+    final Compiler compiler, {
+    final Precedence precedence = Precedence.and,
+    final void Function()? beforePatch,
+  }) {
+    final int endJump = compiler.emitJump(OpCodes.opJumpIfFalse);
+    compiler.emitOpCode(OpCodes.opPop);
+    parsePrecedence(compiler, precedence);
+    beforePatch?.call();
+    compiler.patchJump(endJump);
+  }
