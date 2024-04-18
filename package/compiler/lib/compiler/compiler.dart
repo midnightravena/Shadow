@@ -137,3 +137,11 @@ class Compiler {
     }
     return currentToken;
   }
+
+  bool check(final Tokens type) => currentToken.type == type;
+
+  bool match(final Tokens type) {
+    if (!check(type)) return false;
+    advance();
+    return true;
+  }
