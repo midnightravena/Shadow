@@ -39,3 +39,16 @@ class CompilationException implements Exception {
         received.code,
         span.toString(),
       );
+
+  factory CompilationException.expectedTokenButReceivedToken(
+    final String module,
+    final Tokens expected,
+    final Tokens received,
+    final BeizeSpan span,
+  ) =>
+      CompilationException.expectedXButReceivedX(
+        module,
+        expected.code,
+        received.code,
+        span.toString(),
+      );
