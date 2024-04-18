@@ -373,3 +373,24 @@ abstract class Parser {
       nextRule = Parserule.of(compiler.currentToken.type);
     }
   } 
+
+  static void parseUnaryExpression(final Compiler compiler) {
+    final Tokens operator = compiler.previousToken.type;
+    parsePrecedence(compiler, Precedence.unary);
+    switch (operator) {
+      case Tokens.plus:
+        break;
+
+      case Tokens.minus:
+        compiler.emitOpCode(OpCodes.opNegate);
+
+      case Tokens.bang:
+        compiler.emitOpCode(OpCodes.opNot);
+
+      case Tokens.tilde:
+        compiler.emitOpCode(OpCodes.opBitwiseNot);
+
+      default:
+        throw UnreachableException();
+    }
+  }
