@@ -196,3 +196,64 @@ abstract class Parser {
     compiler.emitOpCode(OpCodes.opEndScope);
     compiler.patchJump(catchJump);
   }
+
+  static Future<void> parseImportStatement(
+    final Compiler compiler,
+  ) async {
+    if (compiler.scopeDepth != 0) {
+      throw CompilationException.topLevelImports(
+        compiler.moduleName,
+        compiler.previousToken,
+      );
+    }
+    compiler.consume(Tokens.string);
+    final String modulePath =
+        compiler.resolveImportPath(compiler.previousToken.literal as String);
+    final String moduleName = compiler.resolveRelativePath(modulePath);
+    int moduleIndex = -1;
+    for (int i = 0; i < compiler.modules.length; i += 2) {
+      final int x = compiler.modules[i];
+      if (compiler.constants[x] == moduleName) {
+        moduleIndex = i;
+      }
+    }
+    if (moduleIndex == -1) {
+      moduleIndex = compiler.modules.length;
+      final int nameIndex = compiler.makeConstant(moduleName);
+      final Compiler moduleCompiler = await compiler.createModuleCompiler(
+        moduleIndex,
+        modulePath,
+        isAsync: false,
+      );
+      final int functionIndex =
+          compiler.makeConstant(moduleCompiler.currentFunction);
+      compiler.modules.add(nameIndex);
+      compiler.modules.add(functionIndex);
+      await moduleCompiler.compile();
+    }
+    if (compiler.match(Tokens.onlyKw)) {
+      bool cont = true;
+      while (cont && !compiler.check(Tokens.semi)) {
+        compiler.emitOpCode(OpCodes.opImport);
+        compiler.emitCode(moduleIndex);
+        compiler.consume(Tokens.identifier);
+        final int onlyIndex = parseIdentifierConstant(compiler);
+        compiler.emitOpCode(OpCodes.opConstant);
+        compiler.emitCode(onlyIndex);
+        compiler.emitOpCode(OpCodes.opGetProperty);
+        compiler.emitOpCode(OpCodes.opDeclare);
+        compiler.emitCode(onlyIndex);
+        cont = compiler.match(Tokens.comma);
+      }
+      compiler.consume(Tokens.semi);
+    } else {
+      compiler.emitOpCode(OpCodes.opImport);
+      compiler.emitCode(moduleIndex);
+      compiler.consume(Tokens.asKw);
+      compiler.consume(Tokens.identifier);
+      final int asIndex = parseIdentifierConstant(compiler);
+      compiler.consume(Tokens.semi);
+      compiler.emitOpCode(OpCodes.opDeclare);
+      compiler.emitCode(asIndex);
+    }
+  }
