@@ -16,7 +16,7 @@
 
 # Documentation
 
-Visit [shadow docs](https://shadow.vercel.app).
+Visit [shadow docs](https://shadow.doc.vercel.app).
 
 # Example
 
