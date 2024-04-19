@@ -1,0 +1,6 @@
+import "./main.shadow" as main;
+import "./utils.shadow" as utils;
+
+printHello := -> {
+    print("Hello World!");
+};
