@@ -1,0 +1,23 @@
+name: vm
+description: Virtual Machine of Shadow.
+version: 0.0.1
+
+publish_to: none
+
+environment:
+    sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+    shared:
+        git:
+            url: https://github.com/midnightravena/Shadow.git
+            path: packages/shared
+
+dependency_overrides:
+    shared:
+        path: ../shared
+
+dev_dependencies:
+    dart_lint:
+        git:
+            url: https://github.com/sahilarun/dart_lint.git
