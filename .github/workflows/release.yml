@@ -1,0 +1,125 @@
+name: Release
+
+on:
+    workflow_dispatch:
+
+env:
+    CLI_CWD: ./packages/cli
+
+jobs:
+    build-linux:
+        name: Build (Linux)
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - uses: dart-lang/setup-dart@v1
+
+            - name: 🚧 Install dependencies
+              working-directory: ${{ env.CLI_CWD }}
+              run: dart pub get
+
+            - name: 👷 Build binaries
+              working-directory: ${{ env.CLI_CWD }}
+              run: |
+                  mkdir ./dist
+                  dart compile exe ./lib/main.dart -o ./dist/beize-linux
+
+            - name: 🔢 Get release name
+              id: release_name
+              uses: actions/github-script@v6
+              with:
+                  result-encoding: string
+                  script: |
+                      const { getReleaseName } = require("./scripts/releaseName");
+                      return getReleaseName();
+
+            - name: 🚀 Release
+              uses: ncipollo/release-action@v1
+              with:
+                  tag: ${{ steps.release_name.outputs.result }}
+                  artifacts: ${{ env.CLI_CWD }}/dist/beize-linux
+                  draft: true
+                  allowUpdates: true
+                  artifactErrorsFailBuild: true
+                  updateOnlyUnreleased: true
+                  generateReleaseNotes: true
+
+    build-windows:
+        name: Build (Windows)
+        runs-on: windows-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - uses: dart-lang/setup-dart@v1
+
+            - name: 🚧 Install dependencies
+              working-directory: ${{ env.CLI_CWD }}
+              run: dart pub get
+
+            - name: 👷 Build binaries
+              working-directory: ${{ env.CLI_CWD }}
+              run: |
+                  mkdir ./dist
+                  dart compile exe ./lib/main.dart -o ./dist/beize-windows.exe
+
+            - name: 🔢 Get release name
+              id: release_name
+              uses: actions/github-script@v6
+              with:
+                  result-encoding: string
+                  script: |
+                      const { getReleaseName } = require("./scripts/releaseName");
+                      return getReleaseName();
+
+            - name: 🚀 Release
+              uses: ncipollo/release-action@v1
+              with:
+                  tag: ${{ steps.release_name.outputs.result }}
+                  artifacts: ${{ env.CLI_CWD }}/dist/beize-windows.exe
+                  draft: true
+                  allowUpdates: true
+                  artifactErrorsFailBuild: true
+                  updateOnlyUnreleased: true
+                  generateReleaseNotes: true
+
+    build-macos:
+        name: Build (MacOS)
+        runs-on: macos-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - uses: dart-lang/setup-dart@v1
+
+            - name: 🚧 Install dependencies
+              working-directory: ${{ env.CLI_CWD }}
+              run: dart pub get
+
+            - name: 👷 Build binaries
+              working-directory: ${{ env.CLI_CWD }}
+              run: |
+                  mkdir ./dist
+                  dart compile exe ./lib/main.dart -o ./dist/beize-macos
+
+            - name: 🔢 Get release name
+              id: release_name
+              uses: actions/github-script@v6
+              with:
+                  result-encoding: string
+                  script: |
+                      const { getReleaseName } = require("./scripts/releaseName");
+                      return getReleaseName();
+
+            - name: 🚀 Release
+              uses: ncipollo/release-action@v1
+              with:
+                  tag: ${{ steps.release_name.outputs.result }}
+                  artifacts: ${{ env.CLI_CWD }}/dist/beize-macos
+                  draft: true
+                  allowUpdates: true
+                  artifactErrorsFailBuild: true
+                  updateOnlyUnreleased: true
+                  generateReleaseNotes: true
