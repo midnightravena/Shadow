@@ -7,8 +7,15 @@
 
 # Language Specification
 - The language syntax is a mix of Go and JavaScript.
+- It is also highly dynamic and enigmatic embeddable scripting language.
 - Shadow script files have an `.shadow` extension.
 - The [`compiler`](./packages/compiler) and [`vm`](./packages/vm) provides the compiler and the runtime for the language.
+- The performance is reasonable for a mere scripting language.
+- It can do `100000` iterations and function calls in around 225 milliseconds.
+
+# Documentation
+
+Visit [shadow docs](https://shadow.vercel.app).
 
 # Example
 
