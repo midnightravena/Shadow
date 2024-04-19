@@ -1,0 +1,44 @@
+site_name: Shadow
+site_url: https://shadow.docs.vercel.app
+docs_dir: ./docs
+repo_url: https://github.com/midnightravena/Shadow
+repo_name: midnightravena/Shadow
+edit_uri: edit/main/docs/
+
+theme:
+    name: material
+    logo: assets/logo.png
+    favicon: assets/favicon.png
+    palette:
+        scheme: slate
+        primary: teal
+        accent: teal
+    font:
+        text: DM Sans
+        code: Roboto Mono
+    features:
+        - navigation.top
+        - navigation.sections
+        - navigation.tabs
+        - navigation.tabs.sticky
+        - navigation.top
+        - content.action.edit
+
+markdown_extensions:
+    - admonition
+    - toc:
+          permalink: true
+    - pymdownx.highlight
+    - pymdownx.inlinehilite
+    - pymdownx.superfences
+    - pymdownx.snippets
+    - tables
+
+extra_css:
+    - assets/styles.css
+
+copyright: Licensed under GPL-3.0
+extra:
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/midnightravena/Shadow
