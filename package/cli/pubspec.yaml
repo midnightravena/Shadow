@@ -24,11 +24,11 @@ dependencies:
     path: ^1.8.3
 
 dependency_overrides:
-    beize_compiler:
+    compiler:
         path: ../compiler
-    beize_shared:
+    shared:
         path: ../shared
-    beize_vm:
+    vm:
         path: ../vm
 
 dev_dependencies:
