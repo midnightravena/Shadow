@@ -1,0 +1,11 @@
+name: beize_shared
+description: Shared components of Beize.
+version: 0.0.1
+
+environment:
+    sdk: ">=3.0.0 <4.0.0"
+
+dev_dependencies:
+    zlint:
+        git:
+            url: https://github.com/sahilarun/dart_lint.git
