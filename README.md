@@ -14,10 +14,6 @@
 - The performance is reasonable for a mere scripting language.
 - It can do `100000` iterations and function calls in around 225 milliseconds.
 
-# Documentation
-
-Visit [shadow docs](https://shadow.doc.vercel.app).
-
 # Example
 
 ```shadow
